@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="App1.Controls.DetailToolbar"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <CommandBar
+        x:Name="commandBar"
+        Height="36"
+        Background="Transparent"
+        DefaultLabelPosition="Right">
+        <AppBarButton
+            x:Name="buttonBack"
+            HorizontalAlignment="Left"
+            Icon="Back"
+            Label="Indietro"
+            LabelPosition="Default"
+            Tag="back" />
+        <AppBarButton
+            x:Name="buttonEdit"
+            HorizontalAlignment="Left"
+            Icon="Edit"
+            Label="Modifica"
+            LabelPosition="Default"
+            Tag="edit" />
+        <!--<AppBarButton x:Name="buttonDelete" Icon="Delete" Label="Cancella" LabelPosition="Default" HorizontalAlignment="Left" Style="{StaticResource ToolBarButtonStyle}" Tag="delete" />-->
+        <AppBarButton
+            x:Name="buttonCancel"
+            HorizontalAlignment="Left"
+            Icon="Cancel"
+            Label="Annulla"
+            LabelPosition="Default"
+            Tag="cancel" />
+        <AppBarButton
+            x:Name="buttonSave"
+            HorizontalAlignment="Left"
+            Icon="Save"
+            Label="Salva"
+            LabelPosition="Default"
+            Tag="save" />
+    </CommandBar>
+</UserControl>
