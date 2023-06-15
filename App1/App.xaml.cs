@@ -1,23 +1,15 @@
-﻿using Microsoft.UI.Xaml;
+﻿using App1.Contracts;
+using App1.Data;
+using App1.Services;
+using App1.ViewModels;
+using App1.Views;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Microsoft.UI.Xaml.Shapes;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace App1
 {
@@ -32,8 +24,40 @@ namespace App1
         /// </summary>
         public App()
         {
+            var serviceProvider = ConfigureServices();
+            Ioc.Default.ConfigureServices(serviceProvider);
             this.InitializeComponent();
         }
+
+        /// <summary>
+        /// Configures the current <see cref="App"/> instance in use.
+        /// </summary>
+        public new static App Current => (App)Application.Current;
+
+        /// <summary>
+        /// Configures the services for the application.
+        /// </summary>
+        /// <returns></returns>
+        private static IServiceProvider ConfigureServices()
+        {
+            var services = new ServiceCollection();
+
+            var config = new ConfigurationBuilder()
+                .SetBasePath(AppContext.BaseDirectory)
+                .AddJsonFile("appsettings.json", optional: false)
+                .AddUserSecrets<App>(optional: true)
+                .Build();
+
+            services.AddDbContext<EmployeeContext>(options => options.UseInMemoryDatabase("employees"));
+            services.AddSingleton<INavigationService, NavigationService>();
+            services.AddSingleton<IDataService, EFDataService>();
+            services.AddTransient<IDialogService, DialogService>();
+            services.AddTransient<OverviewViewModel>();
+            services.AddTransient<DetailsViewModel>();
+            return services.BuildServiceProvider();
+        }
+
+        public static Window MainWindow { get; } = new Window() { Title = "MainWindow" };
 
         /// <summary>
         /// Invoked when the application is launched.
@@ -41,10 +65,13 @@ namespace App1
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            m_window = new MainWindow();
-            m_window.Activate();
-        }
+            var shellFrame = new Frame
+            {
+                Content = new MainPage()
+            };
 
-        private Window m_window;
+            MainWindow.Content = shellFrame;
+            MainWindow.Activate();
+        }
     }
 }
