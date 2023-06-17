@@ -14,8 +14,10 @@
   <ItemGroup>
     <None Remove="Controls\Details\Details.xaml" />
     <None Remove="Controls\Toolbars\DetailToolbar\DetailToolbar.xaml" />
+    <None Remove="Styles\Cards.xaml" />
     <None Remove="Views\AboutPage.xaml" />
     <None Remove="Views\DetailsPage.xaml" />
+    <None Remove="Views\Employee\Details\EmployeeDetails.xaml" />
     <None Remove="Views\MainPage.xaml" />
     <None Remove="Views\OverviewPage.xaml" />
   </ItemGroup>
@@ -58,6 +60,12 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Styles\Cards.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Employee\Details\EmployeeDetails.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\OverviewPage.xaml">
