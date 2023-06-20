@@ -1,4 +1,5 @@
 ﻿using App1.Contracts;
+using App1.Infrastructure.Messenger;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using System;
@@ -16,6 +17,16 @@ public class ViewModelBase : ObservableObject
         MessageService = commonServices.MessageService;
         DialogService = commonServices.DialogService;
         LogService = commonServices.LogService;
+
+        WeakReferenceMessenger.Default.Register<StatusMessage>(this, (r, m) =>
+        {
+            StatusMessage(m.Value);
+        });
+
+        WeakReferenceMessenger.Default.Register<StatusErrorMessage>(this, (r, m) =>
+        {
+            StatusError(m.Value);
+        });
     }
 
     public IContextService ContextService
@@ -78,18 +89,21 @@ public class ViewModelBase : ObservableObject
 
     public void StatusReady()
     {
-        MessageService.Send(this, "StatusMessage", "Ready");
+        WeakReferenceMessenger.Default.Send("StatusMessage", "Ready");
+        //MessageService.Send(this, "StatusMessage", "Ready");
     }
 
     public void StatusMessage(string message)
     {
         Microsoft.AppCenter.Analytics.Analytics.TrackEvent(message);
-        MessageService.Send(this, "StatusMessage", message);
+        WeakReferenceMessenger.Default.Send("StatusMessage", message);
+        //MessageService.Send(this, "StatusMessage", message);
     }
     public void StatusError(string message)
     {
         Microsoft.AppCenter.Analytics.Analytics.TrackEvent(message);
-        MessageService.Send(this, "StatusError", message);
+        WeakReferenceMessenger.Default.Send("StatusError", message);
+        //MessageService.Send(this, "StatusError", message);
     }
 
     public void EnableThisView(string message = null)
@@ -99,6 +113,7 @@ public class ViewModelBase : ObservableObject
     }
     public void DisableThisView(string message)
     {
+
         MessageService.Send(this, "DisableThisView", message);
     }
 
