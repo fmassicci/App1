@@ -27,6 +27,28 @@ public class ViewModelBase : ObservableObject
         {
             StatusError(m.Value);
         });
+
+        WeakReferenceMessenger.Default.Register<DisableAllViewsMessage>(this, (r, m) =>
+        {
+            DisableAllViews(m.Value);
+        });
+
+        WeakReferenceMessenger.Default.Register<DisableThisViewMessage>(this, (r, m) =>
+        {
+            DisableThisView(m.Value);
+        });
+
+        WeakReferenceMessenger.Default.Register<EnableAllViewsMessage>(this, (r, m) =>
+        {
+            EnableAllViews(m.Value);
+        });
+
+        WeakReferenceMessenger.Default.Register<EnableOtherViewsMessage>(this, (r, m) =>
+        {
+            EnableOtherViews(m.Value);
+        });
+
+
     }
 
     public IContextService ContextService
@@ -109,31 +131,36 @@ public class ViewModelBase : ObservableObject
     public void EnableThisView(string message = null)
     {
         message ??= "Ready";
-        MessageService.Send(this, "EnableThisView", message);
+        WeakReferenceMessenger.Default.Send("EnableThisView", message);
+        //MessageService.Send(this, "EnableThisView", message);
     }
     public void DisableThisView(string message)
     {
-
-        MessageService.Send(this, "DisableThisView", message);
+        WeakReferenceMessenger.Default.Send("DisableThisView", message);
+        //MessageService.Send(this, "DisableThisView", message);
     }
 
     public void EnableOtherViews(string message = null)
     {
         message ??= "Ready";
-        MessageService.Send(this, "EnableOtherViews", message);
+        WeakReferenceMessenger.Default.Send("EnableOtherViews", message);
+        //MessageService.Send(this, "EnableOtherViews", message);
     }
     public void DisableOtherViews(string message)
     {
-        MessageService.Send(this, "DisableOtherViews", message);
+        WeakReferenceMessenger.Default.Send("DisableOtherViews", message);
+        //MessageService.Send(this, "DisableOtherViews", message);
     }
 
     public void EnableAllViews(string message = null)
     {
         message ??= "Ready";
-        MessageService.Send(this, "EnableAllViews", message);
+        WeakReferenceMessenger.Default.Send("EnableAllViews", message);
+        //MessageService.Send(this, "EnableAllViews", message);
     }
     public void DisableAllViews(string message)
     {
-        MessageService.Send(this, "DisableAllViews", message);
+        WeakReferenceMessenger.Default.Send("DisableAllViews", message);
+        //MessageService.Send(this, "DisableAllViews", message);
     }
 }
