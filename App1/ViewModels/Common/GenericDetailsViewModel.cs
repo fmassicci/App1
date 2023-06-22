@@ -1,5 +1,7 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using App1.Infrastructure.Messenger;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -8,6 +10,30 @@ public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase wh
 {
     public GenericDetailsViewModel(ICommonServices commonServices) : base(commonServices)
     {
+        WeakReferenceMessenger.Default.Register<BeginEditMessage>(this, (r, m) =>
+        {
+            OnEdit();
+        });
+
+        WeakReferenceMessenger.Default.Register<CancelEditMessage>(this, (r, m) =>
+        {
+            CancelEdit();
+        });
+
+        WeakReferenceMessenger.Default.Register<NewItemSavedMessage>(this, (r, m) =>
+        {
+            OnSave();
+        });
+
+        WeakReferenceMessenger.Default.Register<ItemChangedMessage>(this, (r, m) =>
+        {
+            OnSave();
+        });
+
+        WeakReferenceMessenger.Default.Register<ItemDeletedMessage>(this, (r, m) =>
+        {
+            OnDelete();
+        });
     }
 
     public ILookupTables LookupTables => LookupTablesProxy.Instance;
@@ -186,17 +212,17 @@ public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase wh
         }
     }
 
-    public virtual Result Validate(TModel model)
-    {
-        foreach (var constraint in GetValidationConstraints(model))
-        {
-            if (!constraint.Validate(model))
-            {
-                return Result.Error("Errore di validazione", constraint.Message);
-            }
-        }
-        return Result.Ok();
-    }
+    //public virtual Result Validate(TModel model)
+    //{
+    //    foreach (var constraint in GetValidationConstraints(model))
+    //    {
+    //        if (!constraint.Validate(model))
+    //        {
+    //            return Result.Error("Errore di validazione", constraint.Message);
+    //        }
+    //    }
+    //    return Result.Ok();
+    //}
 
     //protected virtual IEnumerable<IValidationConstraint<TModel>> GetValidationConstraints(TModel model) => Enumerable.Empty<IValidationConstraint<TModel>>();
 

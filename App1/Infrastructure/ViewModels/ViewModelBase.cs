@@ -1,4 +1,5 @@
 ﻿using App1.Contracts;
+using App1.Data;
 using App1.Infrastructure.Messenger;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
@@ -12,9 +13,9 @@ public class ViewModelBase : ObservableObject
 
     public ViewModelBase(ICommonServices commonServices)
     {
-        ContextService = commonServices.ContextService;
+        //ContextService = commonServices.ContextService;
         NavigationService = commonServices.NavigationService;
-        MessageService = commonServices.MessageService;
+        //MessageService = commonServices.MessageService;
         DialogService = commonServices.DialogService;
         LogService = commonServices.LogService;
 
@@ -51,18 +52,18 @@ public class ViewModelBase : ObservableObject
 
     }
 
-    public IContextService ContextService
-    {
-        get;
-    }
+    //public IContextService ContextService
+    //{
+    //    get;
+    //}
     public INavigationService NavigationService
     {
         get;
     }
-    public IMessageService MessageService
-    {
-        get;
-    }
+    //public IMessageService MessageService
+    //{
+    //    get;
+    //}
     public IDialogService DialogService
     {
         get;
