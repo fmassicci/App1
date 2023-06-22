@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace App1.ViewModels;
-public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase where TModel : ObservableRecipient, new()
+public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase where TModel : ObservableValidator, new()
 {
     public GenericDetailsViewModel(ICommonServices commonServices) : base(commonServices)
     {
@@ -36,7 +36,7 @@ public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase wh
         });
     }
 
-    public ILookupTables LookupTables => LookupTablesProxy.Instance;
+    //public ILookupTables LookupTables => LookupTablesProxy.Instance;
 
     public bool IsDataAvailable => _item != null;
     public bool IsDataUnavailable => !IsDataAvailable;
@@ -44,9 +44,9 @@ public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase wh
     //public bool CanGoBack => !IsMainView && NavigationService.CanGoBack;
 
     private TModel _item = null;
-    [NotifyPropertyChangedFor(nameof(IsDataAvailable))]
-    [NotifyPropertyChangedFor(nameof(IsDataUnavailable))]
-    [NotifyPropertyChangedFor(nameof(Title))]
+    //[NotifyPropertyChangedFor(nameof(IsDataAvailable))]
+    //[NotifyPropertyChangedFor(nameof(IsDataUnavailable))]
+    //[NotifyPropertyChangedFor(nameof(Title))]
     public TModel Item
     {
         get => _item;
@@ -56,9 +56,9 @@ public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase wh
             {
                 EditableItem = _item;
                 IsEnabled = (!_item?.IsEmpty) ?? false;
-                NotifyPropertyChanged(nameof(IsDataAvailable));
-                NotifyPropertyChanged(nameof(IsDataUnavailable));
-                NotifyPropertyChanged(nameof(Title));
+                OnPropertyChanged(nameof(IsDataAvailable));
+                OnPropertyChanged(nameof(IsDataUnavailable));
+                OnPropertyChanged(nameof(Title));
             }
         }
     }
@@ -99,6 +99,7 @@ public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase wh
     {
         StatusReady();
         BeginEdit();
+        WeakReferenceMessenger.Default.Send(this);
         MessageService.Send(this, "BeginEdit", Item);
     }
 
