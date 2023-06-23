@@ -1,12 +1,13 @@
 ﻿using App1.Infrastructure.Messenger;
-using CommunityToolkit.Mvvm.ComponentModel;
+using App1.Infrastructure.ViewModels;
+using App1.Services;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace App1.ViewModels;
-public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase where TModel : ObservableValidator, new()
+public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase where TModel : ExtendedObservableValidator, new()
 {
     public GenericDetailsViewModel(ICommonServices commonServices) : base(commonServices)
     {
@@ -99,8 +100,8 @@ public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase wh
     {
         StatusReady();
         BeginEdit();
-        WeakReferenceMessenger.Default.Send(this);
-        MessageService.Send(this, "BeginEdit", Item);
+        WeakReferenceMessenger.Default.Send(this, "BeginEdit", Item);
+        //MessageService.Send(this, "BeginEdit", Item);
     }
 
     public virtual void BeginEdit()
@@ -120,7 +121,8 @@ public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase wh
     {
         StatusReady();
         CancelEdit();
-        MessageService.Send(this, "CancelEdit", Item);
+        WeakReferenceMessenger.Default.Send(this, "CancelEdit", Item);
+        //MessageService.Send(this, "CancelEdit", Item);
     }
     public virtual void CancelEdit()
     {
@@ -146,7 +148,9 @@ public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase wh
         IsEditMode = false;
     }
 
-    public ICommand SaveCommand => new RelayCommand(OnSave);
+    //public ICommand SaveCommand => new RelayCommand(OnSave);
+
+    [RelayCommand]
     protected async virtual void OnSave()
     {
         StatusReady();
@@ -182,7 +186,7 @@ public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase wh
             }
             IsEditMode = false;
 
-            NotifyPropertyChanged(nameof(ItemIsNew));
+            OnPropertyChanged(nameof(ItemIsNew));
         }
         IsEnabled = true;
     }

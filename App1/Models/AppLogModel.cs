@@ -1,4 +1,5 @@
-﻿using System;
+﻿using App1.Data;
+using System;
 
 namespace App1.Models;
 public partial class AppLogModel
