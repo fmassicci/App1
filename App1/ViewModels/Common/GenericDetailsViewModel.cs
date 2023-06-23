@@ -4,7 +4,6 @@ using App1.Services;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace App1.ViewModels;
 public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase where TModel : ExtendedObservableValidator, new()
@@ -85,7 +84,8 @@ public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase wh
         set => SetProperty(ref _isEnabled, value);
     }
 
-    public ICommand BackCommand => new RelayCommand(OnBack);
+    //public ICommand BackCommand => new RelayCommand(OnBack);
+    [RelayCommand]
     protected virtual void OnBack()
     {
         StatusReady();
@@ -95,7 +95,9 @@ public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase wh
         }
     }
 
-    public ICommand EditCommand => new RelayCommand(OnEdit);
+    //public ICommand EditCommand => new RelayCommand(OnEdit);
+
+    [RelayCommand]
     protected virtual void OnEdit()
     {
         StatusReady();
@@ -116,7 +118,8 @@ public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase wh
         }
     }
 
-    public ICommand CancelCommand => new RelayCommand(OnCancel);
+    //public ICommand CancelCommand => new RelayCommand(OnCancel);
+    [RelayCommand]
     protected virtual void OnCancel()
     {
         StatusReady();
@@ -191,7 +194,8 @@ public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase wh
         IsEnabled = true;
     }
 
-    public ICommand DeleteCommand => new RelayCommand(OnDelete);
+    //public ICommand DeleteCommand => new RelayCommand(OnDelete);
+    [RelayCommand]
     protected async virtual void OnDelete()
     {
         StatusReady();
