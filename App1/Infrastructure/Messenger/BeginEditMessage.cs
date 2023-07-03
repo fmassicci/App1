@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Messaging.Messages;
 
 namespace App1.Infrastructure.Messenger;
-public class BeginEditMessage : ValueChangedMessage<string>
+public class BeginEditMessage : ValueChangedMessage<object>
 {
-    public BeginEditMessage(string value) : base(value) { }
+    public BeginEditMessage(object obj) : base(obj) { }
 }

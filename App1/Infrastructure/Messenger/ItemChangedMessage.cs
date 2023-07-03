@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Messaging.Messages;
 
 namespace App1.Infrastructure.Messenger;
-public class ItemChangedMessage : ValueChangedMessage<string>
+public class ItemChangedMessage : ValueChangedMessage<object>
 {
-    public ItemChangedMessage(string value) : base(value) { }
+    public ItemChangedMessage(object obj) : base(obj) { }
 }

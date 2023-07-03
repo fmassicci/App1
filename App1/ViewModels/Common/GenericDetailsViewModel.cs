@@ -102,7 +102,7 @@ public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase wh
     {
         StatusReady();
         BeginEdit();
-        WeakReferenceMessenger.Default.Send(this, "BeginEdit", Item);
+        WeakReferenceMessenger.Default.Send(new BeginEditMessage(Item));
         //MessageService.Send(this, "BeginEdit", Item);
     }
 
@@ -124,7 +124,7 @@ public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase wh
     {
         StatusReady();
         CancelEdit();
-        WeakReferenceMessenger.Default.Send(this, "CancelEdit", Item);
+        WeakReferenceMessenger.Default.Send(new CancelEditMessage(Item));
         //MessageService.Send(this, "CancelEdit", Item);
     }
     public virtual void CancelEdit()
@@ -157,7 +157,8 @@ public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase wh
     protected async virtual void OnSave()
     {
         StatusReady();
-        var result = Validate(EditableItem);
+        //var result = Validate(EditableItem);
+
         if (result.IsOk)
         {
             await SaveAsync();
@@ -175,17 +176,19 @@ public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase wh
         if (await SaveItemAsync(EditableItem))
         {
             Item.Merge(EditableItem);
-            Item.NotifyChanges();
-            NotifyPropertyChanged(nameof(Title));
+            //Item.NotifyChanges();
+            OnPropertyChanged(nameof(Title));
             EditableItem = Item;
 
             if (isNew)
             {
-                MessageService.Send(this, "NewItemSaved", Item);
+                WeakReferenceMessenger.Default.Send(new CancelEditMessage(Item));
+                //MessageService.Send(this, "NewItemSaved", Item);
             }
             else
             {
-                MessageService.Send(this, "ItemChanged", Item);
+                WeakReferenceMessenger.Default.Send(new ItemChangedMessage(Item));
+                //MessageService.Send(this, "ItemChanged", Item);
             }
             IsEditMode = false;
 
@@ -212,7 +215,8 @@ public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase wh
             IsEnabled = false;
             if (await DeleteItemAsync(model))
             {
-                MessageService.Send(this, "ItemDeleted", model);
+                WeakReferenceMessenger.Default.Send(new ItemDeletedMessage(model));
+                //MessageService.Send(this, "ItemDeleted", model);
             }
             else
             {
@@ -221,19 +225,19 @@ public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase wh
         }
     }
 
-    //public virtual Result Validate(TModel model)
-    //{
-    //    foreach (var constraint in GetValidationConstraints(model))
-    //    {
-    //        if (!constraint.Validate(model))
-    //        {
-    //            return Result.Error("Errore di validazione", constraint.Message);
-    //        }
-    //    }
-    //    return Result.Ok();
-    //}
+    public virtual Result Validate(TModel model)
+    {
+        foreach (var constraint in GetValidationConstraints(model))
+        {
+            if (!constraint.Validate(model))
+            {
+                return Result.Error("Errore di validazione", constraint.Message);
+            }
+        }
+        return Result.Ok();
+    }
 
-    //protected virtual IEnumerable<IValidationConstraint<TModel>> GetValidationConstraints(TModel model) => Enumerable.Empty<IValidationConstraint<TModel>>();
+    protected virtual IEnumerable<IValidationConstraint<TModel>> GetValidationConstraints(TModel model) => Enumerable.Empty<IValidationConstraint<TModel>>();
 
     public abstract bool ItemIsNew
     {
